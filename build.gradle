@@ -1,15 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.1'
-        
+
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,7 +20,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+
     }
 }
 
@@ -33,6 +33,8 @@ task clean(type: Delete) {
 this.beforeEvaluate {
     println "初始化阶段执行完毕"
 }
+this.gradle.beforeProject {}
+this.gradle.afterProject {}
 //在初始化之后和执行事件之前监听事件
 this.afterEvaluate {
     println "配置阶段执行完毕"
@@ -42,3 +44,70 @@ this.gradle.buildFinished {
     println "执行阶段执行完毕"
 }
 
+/**
+ * project相关api
+ * 1.getAllprojects():获取所有project
+ * 2.getSubprojects():获取当前project下所有子project
+ * 3.getParent():获取当前project的父project
+ * 4.getRootProject():获取rootProject
+ */
+
+/**
+ * 1.获取所有project
+ * @return
+ */
+def getProjects() {
+    println("---------------")
+    println("root project")
+    println("---------------")
+    this.getAllprojects().eachWithIndex {
+        Project project, int index ->
+            if (index == 0) {
+                println("root project:'${project.name}'")
+            } else {
+                println("+---Project: '${project.name}'")
+            }
+    }
+}
+
+
+/**
+ * 2.获取所有子project
+ * @return
+ */
+println "当前项目所有的project:"
+this.getProjects()
+println "当前项目所有的子project:"
+
+def getSubProjects() {
+    println("---------------")
+    println("sub project")
+    println("---------------")
+    this.getSubprojects().eachWithIndex {
+        Project project, int index ->
+            println("sub project:'${project.name}'")
+    }
+}
+
+this.getSubProjects()
+
+/**
+ * 3.获取当前project的父project
+ * @return
+ */
+def getParentProject() {
+    return this.getParent()
+}
+
+println "获取当前project的父project"
+//def project = getParentProject()
+println "the project parent is ${this.name}"
+
+/**
+ * 4.获取rootProject
+ */
+def getRootPro() {
+    this.getRootProject()
+}
+
+println "rootProject name is:${getRootPro().name}"
