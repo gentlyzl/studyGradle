@@ -27,3 +27,18 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+//在初始化阶段之后和配置阶段之前监听事件
+this.beforeEvaluate {
+    println "初始化阶段执行完毕"
+}
+//在初始化之后和执行事件之前监听事件
+this.afterEvaluate {
+    println "配置阶段执行完毕"
+}
+//在执行事件之后事件监听回调
+this.gradle.buildFinished {
+    println "执行阶段执行完毕"
+}
+
