@@ -45,11 +45,18 @@ this.gradle.buildFinished {
 }
 
 /**
- * project相关api
+ * project
+ * 一、相关api
  * 1.getAllprojects():获取所有project
  * 2.getSubprojects():获取当前project下所有子project
  * 3.getParent():获取当前project的父project
  * 4.getRootProject():获取rootProject
+ * 二、project的父工程可以完成对子project的配置
+ * Project project(String path, Closure configureClosure);
+ * 三、对当前结点project和subProject的所有project进行统一配置
+ * void allprojects(Closure configureClosure);
+ * 四、不包括当前结点工程，只包括它的subProject
+ * void subprojects(Closure configureClosure);
  */
 
 /**
@@ -111,3 +118,43 @@ def getRootPro() {
 }
 
 println "rootProject name is:${getRootPro().name}"
+
+/**
+ * 父project 完成对子project配置文件配置
+ */
+println "父project完全可以操作子project"
+project('baselibrary') {
+    Project project ->
+        apply plugin: 'com.android.library'
+        dependencies {
+
+        }
+        version("1.0.0.release")
+}
+
+/**
+ * 对当前结点project和subProject的所有project进行统一配置
+ */
+println "对当前结点project和subProject的所有project进行统一配置"
+allprojects {
+    group('com.aixuexi')
+    version('1.0.0.release')
+}
+
+println project("baselibrary").group
+
+/**
+ * 不包括当前结点project只包括subProject的所有project
+ *  */
+println "不包括当前结点project只包括subProject的所有project"
+subprojects {
+    Project project ->
+        //如果子工程作为libary的都上传到maven仓库
+        if (project.plugins.hasPlugin('com.android.libary'))
+            apply from: '../pubulishToMaven.gradle'
+}
+
+
+
+
+
