@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+//通过from脚本引入扩展属性
+apply from: file("../config.gradle")
+android {
+
+    compileSdkVersion this.android.compileSdkVersion
+    buildToolsVersion this.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion this.android.minSdkVersion
+        targetSdkVersion this.android.targetSdkVersion
+        versionCode this.android.versionCode
+        versionName this.android.versionName
+
+        testInstrumentationRunner this.android.testInstrumentationRunner
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation this.dependencie.suportCompat
+    testImplementation this.dependencie.junit
+    androidTestImplementation this.dependencie.runner
+    androidTestImplementation this.dependencie.supportEspresso
+}

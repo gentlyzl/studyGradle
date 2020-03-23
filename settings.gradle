@@ -3,3 +3,4 @@ include ':app'
 include ':baselibrary'
 
 println "初始化阶段开始执行---"
+include ':test'
