@@ -1,0 +1,33 @@
+/**
+ * 定义拓展属性
+ * gradle规定所有父project的属性都被子project所继承
+ */
+
+ext {
+
+    android = [
+            compileSdkVersion        : 29,
+            buildToolsVersion        : '29.0.2',
+            minSdkVersion            : 14,
+            targetSdkVersion         : 29,
+            applicationId            : 'com.aixuexi.studygradle',
+            versionCode              : 1,
+            versionName              : '1.0',
+            minifyEnabled            : false,
+            testInstrumentationRunner: 'android.support.test.runner.AndroidJUnitRunner'
+    ]
+    signConfigs = ['keyAlias'   : 'qAndroid',
+                   'keyPassword': "rz123456"
+    ]
+
+    java = ['javaVersion': JavaVersion.VERSION_1_8]
+
+    dependencie = [suportCompat   : 'com.android.support:appcompat-v7:28.0.0',
+                   supportDesign  : 'com.android.support:design:28.0.0',
+                   support_v13    : 'com.android.support:support-v13:28.0.0',
+                   junit          : 'junit:junit:4.12',
+                   runner         : 'com.android.support.test:runner:1.0.2',
+                   supportEspresso: 'com.android.support.test.espresso:espresso-core:3.0.2',
+
+    ]
+}

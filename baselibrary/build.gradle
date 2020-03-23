@@ -1,16 +1,19 @@
 apply plugin: 'com.android.library'
+//通过from脚本引入扩展属性
+apply from: file("../config.gradle")
+
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion this.android.compileSdkVersion
+    buildToolsVersion this.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion this.android.minSdkVersion
+        targetSdkVersion this.android.targetSdkVersion
+        versionCode this.android.versionCode
+        versionName this.android.versionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner this.android.testInstrumentationRunner
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -26,9 +29,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation this.dependencie.suportCompat
+    testImplementation this.dependencie.junit
+    androidTestImplementation this.dependencie.runner
+    androidTestImplementation this.dependencie.supportEspresso
 }

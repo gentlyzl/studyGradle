@@ -1,17 +1,17 @@
 apply plugin: 'com.android.application'
-
+apply from: '../config.gradle'
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion this.ext.android.compileSdkVersion
+    buildToolsVersion this.ext.android.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.aixuexi.studygradle"
-        minSdkVersion 14
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        applicationId this.android.applicationId
+        minSdkVersion this.android.minSdkVersion
+        targetSdkVersion this.android.targetSdkVersion
+        versionCode this.android.versionCode
+        versionName this.android.versionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner this.android.versionName
     }
 
     buildTypes {
@@ -33,9 +33,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v13:28.0.0'
+    testImplementation this.dependencie.junit
+    androidTestImplementation this.dependencie.runner
+    androidTestImplementation this.dependencie.supportEspresso
+    implementation this.dependencie.supportDesign
+    implementation this.dependencie.support_v13
 }
