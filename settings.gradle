@@ -1,6 +1,11 @@
 rootProject.name = 'studyGradle'
 include ':app'
 include ':baselibrary'
+//判断是否有该属性
+if (hasProperty('isLoadTest') ? isLoadTest.toBoolean() : false) {
+    include ':test'
+}
 
 println "初始化阶段开始执行---"
-include ':test'
+
+
