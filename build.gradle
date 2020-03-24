@@ -1,21 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-buildscript {
-
-    repositories {
-        google()
-        jcenter()
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
 allprojects {
     repositories {
         google()
@@ -70,8 +54,7 @@ this.gradle.buildFinished {
  *     into{} //目标文件路径
  *     exclude {}//排除不需要拷贝的文件
  *     rename {}//重命名文件
- *}
- * 3.文件目录遍历
+ *}* 3.文件目录遍历
  *  fileTree
  * */
 
@@ -231,6 +214,54 @@ fileTree(getBuildDir().path + '/apk') {
                     from element.file
                     into(getBuildDir().path + '/test/apk')
                 }
+        }
+}
+//*******************************其他API************************************************************
+/**
+ *
+ */
+
+buildscript {
+    ScriptHandler scriptHandler ->
+        //配置工程仓库地址
+        scriptHandler.repositories {
+            RepositoryHandler repositoryHandler ->
+                repositoryHandler.jcenter()
+                repositoryHandler.google()
+                repositoryHandler.mavenCentral()
+                repositoryHandler.mavenLocal()
+//                repositoryHandler.ivy {}
+                //私有仓库1,可以配置多个
+                repositoryHandler.maven {
+                    //一般为公司名称
+                    name 'psersonal'
+                    //公司项目代码地址
+                    url 'http://localhost:8080:/nexus/repositories/'
+                    //配置用户名和密码
+                    credentials() {
+                        PasswordCredentials passwordCredentials ->
+                            passwordCredentials.username = 'admin'
+                            passwordCredentials.password = 'admin123'
+                    }
+                }
+                //私有仓库1,可以配置多个
+                repositoryHandler.maven {
+                    //一般为公司名称
+                    name 'personal'
+                    //公司项目代码地址
+                    url 'http://localhost:8081:/nexus/repositories/'
+                    //配置用户名和密码
+                    credentials {
+                        PasswordCredentials passwordCredentials ->
+                            passwordCredentials.username = 'zhangsan'
+                            passwordCredentials.password = 'zhangsan123456'
+                    }
+                }
+        }
+        //配置工程'插件'依赖地址,gradle本身对第三方库依赖
+        scriptHandler.dependencies() {
+            DependencyHandler handler ->
+                handler.classpath 'com.android.tools.build:gradle:3.6.1'
         }
 }
 

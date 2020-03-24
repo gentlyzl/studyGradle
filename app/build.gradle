@@ -29,13 +29,22 @@ android {
 
 
 }
-
+//为应用程序添加第三方库依赖
 dependencies {
+    //文件树fileTree,file():单个文件 files()多个文件
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     testImplementation this.dependencie.junit
     androidTestImplementation this.dependencie.runner
     androidTestImplementation this.dependencie.supportEspresso
     implementation this.dependencie.supportDesign
-    implementation this.dependencie.support_v13
+    //第三方引入依赖会打入jar包、war包
+    compile(this.dependencie.support_v13) {
+        //排除依赖
+        exclude('module': 'support-v4')
+        //传递依赖 false：禁止传递依赖，不能引入第三方库 true:可以引用第三方库
+        transitive false
+    }
+    //只在编译期间起作用，不在运行期间起作用
+    //provided(this.dependencie.supportDesign)
 }
