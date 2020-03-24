@@ -57,7 +57,23 @@ this.gradle.buildFinished {
  * void allprojects(Closure configureClosure);
  * 四、不包括当前结点工程，只包括它的subProject
  * void subprojects(Closure configureClosure);
- */
+ *
+ * 二、拓展属性
+ * 1.ext{}闭包形式
+ * 2.gradle.properties 属性=属性值形式
+ *
+ * 三、文件相关API
+ * 1.文件定位
+ * file(path)：从当前project开始查找
+ * 2.文件拷贝
+ * copy{*     from file{} //拷贝文件路径
+ *     into{} //目标文件路径
+ *     exclude {}//排除不需要拷贝的文件
+ *     rename {}//重命名文件
+ *}
+ * 3.文件目录遍历
+ *  fileTree
+ * */
 
 /**
  * 1.获取所有project
@@ -155,6 +171,68 @@ subprojects {
 }
 
 
+/**
+ * 文件操作
+ */
+
+println "root file path :${getRootDir().absolutePath}"
+println "build file path :${getBuildDir().absolutePath}"
+println "the project file path :${getProjectDir().absolutePath}"
+
+/**
+ * 文件定位
+ */
+def getContent(String path) {
+    try {
+        //从当前project工程开始查找
+        def file = file(path)
+        return file
+    } catch (GradleException e) {
+        e.printStackTrace()
+    }
+}
+
+println "指定文件内容如下："
+def file = getContent('config.gradle')
+//println file.getText()
+
+/**
+ * 文件copy 把app下的文件拷贝到rootProject的build目录下
+ * 支持单个文件拷贝、和文件夹拷贝
+ */
+def getAppProject() {
+    getSubprojects().find() {
+        Project project ->
+            if (project.name == 'app') {
+                project.copy {
+                    from file { project.getBuildDir().path + '/outputs/apk/debug/' }
+                    into project.getRootProject().getBuildDir().path + '/apk'
+                    exclude {}//排除不需要拷贝文件
+                    rename {}//重命名文件
+                }
+
+            }
+    }
+}
+
+println "文件拷贝："
+getAppProject()
+
+/**
+ * 文件遍历的同时完成copy
+ */
+fileTree(getBuildDir().path + '/apk') {
+    ConfigurableFileTree fileTree ->
+        fileTree.visit {
+            FileVisitDetails element ->
+                println "the file name is ${element.file.name}"
+                //遍历每个文件同时拷贝到另外一个目录
+                copy {
+                    from element.file
+                    into(getBuildDir().path + '/test/apk')
+                }
+        }
+}
 
 
 
