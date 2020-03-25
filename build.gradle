@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 allprojects {
     repositories {
         google()
@@ -262,6 +261,29 @@ buildscript {
         scriptHandler.dependencies() {
             DependencyHandler handler ->
                 handler.classpath 'com.android.tools.build:gradle:3.6.1'
+        }
+}
+/**
+ * 执行外部命令
+ */
+
+task(name: 'apkcopy') {
+    Task task ->
+        //gradle执行阶段去执行
+        task.doLast {
+            def sourcePath = getBuildDir().path + "/apk"
+            def targetPath = "/Users/tianyejun/Downloads/"
+            def command = "mv -f ${sourcePath} ${targetPath}"
+            try {
+                //执行命令
+                exec {
+                    executable('bash')
+                    args '-c', command
+                    println "命令执行完毕"
+                }
+            } catch (GradleException e) {
+                e.printStackTrace()
+            }
         }
 }
 
