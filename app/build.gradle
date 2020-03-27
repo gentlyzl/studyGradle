@@ -48,3 +48,27 @@ dependencies {
     //只在编译期间起作用，不在运行期间起作用
     //provided(this.dependencie.supportDesign)
 }
+
+/**
+ * 执行外部命令
+ */
+
+task(name:'apkcopy','apkcopy') {
+    Task task ->
+        //gradle执行阶段去执行
+        task.doLast {
+            def sourcePath = getBuildDir().path + "/outputs/apk"
+            def targetPath = "/Users/tianyejun/Downloads/"
+            def command = "mv -f ${sourcePath} ${targetPath}"
+            try {
+                //执行命令
+                exec {
+                    executable 'bash'
+                    args '-c', command
+                    println "命令执行完毕"
+                }
+            } catch (GradleException e) {
+                e.printStackTrace()
+            }
+        }
+}
