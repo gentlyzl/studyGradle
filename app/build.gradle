@@ -53,7 +53,7 @@ dependencies {
  * 执行外部命令
  */
 
-task(name:'apkcopy','apkcopy') {
+task(name: 'apkcopy', 'apkcopy') {
     Task task ->
         //gradle执行阶段去执行
         task.doLast {
@@ -72,3 +72,66 @@ task(name:'apkcopy','apkcopy') {
             }
         }
 }
+
+/**
+ *> （1）Task创建方式
+ * 1.直接通过task函数创建
+ * task('helloTask'){}
+ * 2.TaskContainer创建
+ * getTasks().create('task名称'){}
+ * >（2）Task配置
+ */
+
+/**
+ * Task第一种创建方式
+ */
+task('helloTask') {
+    println "Task第一种创建方式---helloTask"
+}
+/**
+ * Task第一种创建方式
+ */
+getTasks().create("secondTask") {
+    println "Task第二种创建方式--secondTask"
+}
+
+/**
+ * 第一种配置方式
+ */
+
+task(group: "config", description: "config第一种方式", 'taskConfig1') {
+    println "Task第一种配置方式---taskConfig1"
+    doFirst {
+        println "Task group name is $group"
+    }
+}
+
+/**
+ * 第二种配置方式
+ */
+
+task('taskConfig2') {
+    Task task ->
+        task.group ="config"
+        task.description = "config第二种方式"
+        println "Task第二种配置方式---taskConfig2"
+}
+
+/**
+ * 计算build执行时长
+ */
+def startBuildTime,endBuildTime
+afterEvaluate {
+    Project project ->
+        def preBuildTask = project.getTasks().getByName("preBuild")
+        preBuildTask.doFirst {
+            startBuildTime = System.currentTimeMillis()
+            println "开始时间为：$startBuildTime"
+        }
+        def buildTask = project.getTasks().getByName("build")
+        buildTask.doLast {
+            endBuildTime = System.currentTimeMillis()
+            println "build时长为：${endBuildTime - startBuildTime}"
+        }
+}
+
