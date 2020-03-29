@@ -135,3 +135,89 @@ afterEvaluate {
         }
 }
 
+/**
+ * Task依赖方式
+ * 1.dependsOn
+ */
+task("taskX"){
+    doLast {
+        println "taskX"
+    }
+}
+task("taskY"){
+    doLast {
+        println "taskY"
+    }
+}
+println "dependsOn 第一种依赖方式"
+task("taskZ" ,dependsOn: [taskX,taskY]){
+    println "taskZ"
+}
+println "dependsOn 第二种依赖方式"
+taskZ {}.dependsOn(taskX,taskY)
+
+/**
+ * task1依赖以lib开头的Task
+ */
+
+task("lib1"){
+    doLast {
+        println "lib1"
+    }
+}
+
+task("lib2"){
+    doLast {
+        println "lib2"
+    }
+}
+task("nolib"){
+    doLast {
+        println "nolib"
+    }
+}
+
+task("task3"){
+    Task tsk->
+        tsk.dependsOn = this.tasks.findAll {
+            return it.name.startsWith("lib")
+        }
+        tsk.doLast {
+            println "执行task依赖lib开头的task"
+        }
+}
+
+println ""
+task("handleRelaseFile"){
+    def srcFile = file('release.xml')
+    def destDir = new File(this.getBuildDir().path,'generated/release/')
+    doLast {
+        if(!destDir.isDirectory()){
+            destDir.mkdirs()
+        }
+        def releases = new XmlParser().parse(srcFile)
+        releases.release.each{
+            def node ->
+                def versionName = node.versionName.text()
+                def versionCode = node.versionCode.text()
+                def versionInfo = node.versionInfo.text()
+                println "versionName =${versionName} versionCode=${versionCode} versionInfo${versionInfo}"
+                //创建文件并写入节点
+                def destFile = new File(destDir.path,"release-${versionName}.text")
+                destFile.withWriter {
+                    def writer ->
+                        writer.write("${versionName}--->${versionCode}--->${versionInfo}")
+                }
+        }
+    }
+}
+
+task ("handleRealseFileTest",dependsOn: handleRelaseFile){
+    def dir = fileTree(this.getBuildDir().path+'/generated/release/')
+    doLast {
+        dir.each {
+            println "the file name is ${it}"
+        }
+        println "文件输出完成"
+    }
+}
